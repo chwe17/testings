@@ -5,4 +5,4 @@ NETWORK=yes
 WIRELESS=yes
 HDMI=yes
 USB=yes
-ARMBIANMONITOR=http://ix.io/1lcU
+ARMBIANMONITOR=
