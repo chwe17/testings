@@ -63,6 +63,7 @@ createReport () {
     read -p 'USB: ' usb && echo 'USB='$usb >> ${BOARD}-${BRANCH}.report
     echo "ARMBIANMONITOR="$(sudo armbianmonitor -u | head -n -2 | cut -c 54-) >> ${BOARD}-${BRANCH}.report
     git add -A && git commit
+    hub delete testings
     hub fork
     git push -u $(git remote -v | awk '{print $1}' | grep -vEw origin | tail -n -1) $(date +%Y%m%d)-$BOARD-$BRANCH
     hub pull-request
