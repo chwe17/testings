@@ -81,7 +81,7 @@ createReport () {
             git commit -m "${VERSION}"
             hub fork
             git push -u $(git remote -v | awk '{print $1}' | grep -vEw origin | tail -n -1) $(date +%Y%m%d)-$BOARD-$BRANCH
-            hub pull-request -m "${Version}"
+            hub pull-request -m "${VERSION}"
         ;;
         *)
             git reset --hard HEAD
