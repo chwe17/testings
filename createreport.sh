@@ -112,7 +112,7 @@ pullRequestUpgrade () {
     commit -m"Upgrade from : ${VERSION_BEFORE} to ${VERSION_AFTER}"
     git push -u $(git remote -v | awk '{print $1}' | grep -vEw origin | tail -n -1) $(date +%Y%m%d)-$BOARD-$BRANCH
     hub pull-request
-    echo "bash "$DIR"/createreport.sh -R" >> /home/$(whoami)/.bashrc
+    echo "bash "$DIR/createreport.sh -R" >> /home/$(whoami)/.bashrc
     sudo reboot
 }
 
