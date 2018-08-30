@@ -100,8 +100,8 @@ pullRequestUpgrade () {
     VERSION_AFTER=$(cat /etc/armbian-release | grep VERSION= | cut -c 9-)
     git checkout -b $(date +%Y%m%d)-$BOARD-$BRANCH
     echo 'BOOT=no' > ${BOARD}-${BRANCH}.report
-    echo "VERSION="$VERSION_BEFORE >> ${BOARD}-${BRANCH}.report
-    echo "KERNEL="$(uname -r) >> ${BOARD}-${BRANCH}.report
+    echo "VERSION="$VERSION_AFTER >> ${BOARD}-${BRANCH}.report
+    echo "KERNEL= - " >> ${BOARD}-${BRANCH}.report
     echo "NETWORK=no" >> ${BOARD}-${BRANCH}.report
     echo "WIRELESS=no" >> ${BOARD}-${BRANCH}.report
     echo "HDMI=no" >> ${BOARD}-${BRANCH}.report
