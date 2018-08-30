@@ -55,6 +55,7 @@ checkLocalconfig () {
 }
 
 createReport () {
+    VERSION=$(cat /etc/armbian-release | grep VERSION= | cut -c 9-)
     checkLocalconfig
     git checkout master
     git pull origin master
@@ -77,10 +78,10 @@ createReport () {
     read -p 'Do you want to push this changes upstream and send a PR to armbian? [YES/NO]: ' happy
     case $happy in
         yes|Yes|YES|y|Y)
-            git commit
+            git commit -m "${VERSION}"
             hub fork
             git push -u $(git remote -v | awk '{print $1}' | grep -vEw origin | tail -n -1) $(date +%Y%m%d)-$BOARD-$BRANCH
-            hub pull-request            
+            hub pull-request -m "${Version}"
         ;;
         *)
             git reset --hard HEAD
