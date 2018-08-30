@@ -78,10 +78,10 @@ createReport () {
     read -p 'Do you want to push this changes upstream and send a PR to armbian? [YES/NO]: ' happy
     case $happy in
         yes|Yes|YES|y|Y)
-            git commit -m "${VERSION}"
+            git commit -m "${BOARD}-${BRANCH}: ${VERSION}"
             hub fork
             git push -u $(git remote -v | awk '{print $1}' | grep -vEw origin | tail -n -1) $(date +%Y%m%d)-$BOARD-$BRANCH
-            hub pull-request -m "${VERSION}"
+            hub pull-request -m "${BOARD}-${BRANCH}: ${VERSION}"
         ;;
         *)
             git reset --hard HEAD
