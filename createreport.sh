@@ -1,6 +1,6 @@
 #!/bin/bash
 HUB_ARCH=''
-#some colors we might need them 
+#some colors we might need them
 green='\e[92m'
 red='\e[91m'
 NC='\e[0m'
@@ -54,6 +54,18 @@ checkLocalconfig () {
     fi
 }
 
+checkDVFS () {
+
+    sudo timeout 25 armbianmonitor -m 2 > dvfs.tmp | timeout 4 stress -c 4 -q
+    sed -i '1,4d' dvfs.tmp && sed -i -n -e :a -e '1,1!{P;N;D;};N;ba' dvfs.tmp
+    test=($( cat dvfs.tmp | head -n -2 | tail -n -8 | awk '{print $2 }' | sort | uniq -d ))
+    if [ $(echo ${#test[@]}) -lt 2 ]; then
+        echo "DVFS=no"
+    else
+        echo "DVFS=yes"
+    fi
+}
+
 createReport () {
     VERSION=$(cat /etc/armbian-release | grep VERSION= | cut -c 9-)
     checkLocalconfig
@@ -70,7 +82,8 @@ createReport () {
     read -p 'WIRELESS: ' wlan && echo 'WIRELESS='$wlan >> ${BOARD}-${BRANCH}.report
     read -p 'HDMI: ' hdmi && echo 'HDMI='$hdmi >> ${BOARD}-${BRANCH}.report
     read -p 'USB: ' usb && echo 'USB='$usb >> ${BOARD}-${BRANCH}.report
-    read -p 'DVFS: ' dvfs && echo 'DVFS='$dvfs >> ${BOARD}-${BRANCH}.report
+    #read -p 'DVFS: ' dvfs && echo 'DVFS='$dvfs >> ${BOARD}-${BRANCH}.report
+    checkDVFS >> ${BOARD}-${BRANCH}.report && rm dvfs.tmp
     echo "ARMBIANMONITOR="$(sudo armbianmonitor -u | head -n -2 | cut -c 54-) >> ${BOARD}-${BRANCH}.report
     echo "==================================================="
     git add -A
@@ -132,7 +145,8 @@ afterRestart () {
     read -p 'WIRELESS: ' wlan && echo 'WIRELESS='$wlan >> ${BOARD}-${BRANCH}.report
     read -p 'HDMI: ' hdmi && echo 'HDMI='$hdmi >> ${BOARD}-${BRANCH}.report
     read -p 'USB: ' usb && echo 'USB='$usb >> ${BOARD}-${BRANCH}.report
-    read -p 'DVFS: ' dvfs && echo 'DVFS='$dvfs >> ${BOARD}-${BRANCH}.report
+    #read -p 'DVFS: ' dvfs && echo 'DVFS='$dvfs >> ${BOARD}-${BRANCH}.report
+    checkDVFS >> ${BOARD}-${BRANCH}.report && rm dvfs.tmp
     echo "ARMBIANMONITOR="$(sudo armbianmonitor -u | head -n -2 | cut -c 54-) >> ${BOARD}-${BRANCH}.report
     echo "==================================================="
     git add -A
